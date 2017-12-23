@@ -7,10 +7,10 @@ using namespace std;
 #include <math.h>
 #include <cmath>
 #include <string>
+#include <objbase.h>
 
-
-void evolve39318(bitset<20000> &s, int nbytes);
-void evolve57630z(bitset<20000> &s, int nbytes);
-void evolve57630b(bitset<20000> &s, int nbytes);
-int* pokertest(bitset<8> &s);
-string BazCrypt(string MESSAGE, string password, int generations, int algorithm = 0, bool verbose = false);
+inline void evolve39318(bitset<20000> &s, int nbytes);
+inline void evolve57630z(bitset<20000> &s, int nbytes);
+inline void evolve57630b(bitset<20000> &s, int nbytes);
+inline int* pokertest(bitset<8> &s);
+extern "C" __declspec(dllexport) char* BazCrypt(const char* MESSAGE, const char* password, int generations, int algorithm = 0, bool verbose = false);

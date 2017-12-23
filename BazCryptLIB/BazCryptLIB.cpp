@@ -18,9 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+
 #include "BazCryptLIB.h"
 
-/////////////////////////// LIB TEST CODE 
+
+
+///////////////////////// LIB TEST CODE 
 //int main(int argc,char* argv[])
 //{
 //	string mymessage = "This is a test plain text. This is also very important to hide!";
@@ -38,17 +41,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //	return 0;
 //
 //}
-/////////////////////////
-string BazCrypt(string MESSAGE, string password, int generations,int algorithm ,bool verbose)
+///////////////////////
+char* BazCrypt(const char* MESSAGE, const char* password, int generations, int algorithm, bool verbose)
 {
 
 	int gens = generations;
 	unsigned int ic;
 	int algo = algorithm;
-	string M = MESSAGE;   // Message
-	 // Encrypted Message
+	string M = string(MESSAGE);   // Message
+								  // Encrypted Message
 	string encMs;
-	string key = password; // Key
+	string key = string(password); // Key
 	string q; // quit parameter
 
 
@@ -145,7 +148,7 @@ string BazCrypt(string MESSAGE, string password, int generations,int algorithm ,
 			switch (algo)
 			{
 			case 0:
-				evolve57630b(K, M.size()); 
+				evolve57630b(K, M.size());
 				break;
 			case 1:
 				evolve57630z(K, M.size());
@@ -184,7 +187,7 @@ string BazCrypt(string MESSAGE, string password, int generations,int algorithm ,
 			encMs.push_back(bitMs[ic].to_ulong());
 
 		}
-		
+
 		double monoout = erfc(double(double(double(std::abs(double(oncount - ((M.size() * 8) - oncount)))) / double((sqrt(M.size() * 8)))) / sqrt(2))); // This is the monobit magic equation of NIST SP800
 		if (monoout<0.01) // Needs to be >0.01
 		{
@@ -201,7 +204,21 @@ string BazCrypt(string MESSAGE, string password, int generations,int algorithm ,
 
 		//if (pass == false)system("CLS");
 	} while (pass == false);
-	return encMs;
+
+	////// STR TO CHAR CONV
+	//char* retchar = new char[encMs.length()];
+	size_t csize = strlen(encMs.c_str()) + sizeof(char);
+	char* retptr = NULL;
+	retptr = (char*)::CoTaskMemAlloc(csize);
+	strcpy_s(retptr, csize, encMs.c_str());
+
+	return retptr;
+
+
+
+
+
+	//return encMs;
 }
 // EVOLVE FUNCTIONS
 // Inputs MUST be a bitset of 20000 bits
