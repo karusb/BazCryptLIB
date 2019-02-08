@@ -3,18 +3,23 @@ BazCrypt Encryption C++ Library
 
 Allows you to perform BazCrypt Encryption with a simple function call.
 
-BazCrypt is a symmetric encryption algorithm that uses Cellular Automata to randomise the key that was initially provided as a password.
+BazCrypt is a symmetric XOR encryption algorithm that uses Cellular Automata to randomise the key that was initially provided as a password and provides extra security with generation number.
 
-Refer to the other repository for general purpose use : [https://github.com/karusb/1DCAEncryption](https://github.com/karusb/1DCAEncryption/releases)
 
 # Convention
 ```c++
-string BazCrypt(string MESSAGE, string password, int generations,int algorithm ,bool verbose)
+void BazCrypt(const char* MESSAGE, const char* password, char* output, unsigned long messageLength, unsigned long passwordLength, int generations, int algorithm, bool verbose);
 ```
 
- Message = String message that is to be encrypted/decrypted.
+ Message = char(8bit) array data that is to be encrypted/decrypted.
  
- password = String password that is to generate the IV for the encryption.
+ password = char(8bit) array password that is to generate the IV for the encryption.
+ 
+ output = pre allocated char(8bit) array which has the same size as the message 
+ 
+ messageLength  = length of the Message array
+ 
+ passwordLength = length of the password array
  
  generations = Non 0 integer number that determines the cycles of the algorithm. Also referred as PIN number.
  
@@ -40,18 +45,22 @@ These will be automatically included in your program no need to redefine.
  #include "BazCryptLIB.cpp"
 int main()
 {
-		string mymessage = "This is a test plain text. This is also very important to hide!";
-		string mykey = "asimplepasswordtouse";
-		string myencryptmessage,q;
-		int mygeneration = 150;
-    // ENCRYPTION
-		myencryptmessage = BazCrypt(mymessage, mykey, mygeneration);
-		cout << myencryptmessage << endl;
-    // DECRYPTION
-		myencryptmessage = BazCrypt(myencryptmessage, mykey, mygeneration);
-		cout << myencryptmessage  << endl;
-		cin >> q;
-		return 0;
+	const char* mymessage = "This is a test plain text. This is also very important to hide!";
+	const char* mykey = "asimplepasswordtouse";
+	unsigned long keylen = 21;
+	unsigned long msglen = 64;
+
+	int mygeneration = 150;
+	char* enc = new char[(int)msglen];
+	// ENCRYPTION
+	BazCrypt(mymessage, mykey,enc,msglen,keylen, mygeneration, 2, true);
+	char* ret = new char[(int)msglen];
+	// DECRYPTION
+	BazCrypt(enc, mykey, ret, msglen, keylen, mygeneration, 2, true);
+
+	cout << ret << endl;
+
+	return 0;
 }
 ```
 ![ProgramOutput](https://github.com/karusb/BazCryptLIB/raw/master/bazlib.jpg)
