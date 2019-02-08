@@ -45,9 +45,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //	bool ali = true;
 //	int mygeneration = 150;
 //	char* enc = new char[(int)msglen];
-//	BazCryptChar(mymessage, mykey,enc,msglen,keylen, mygeneration, 2, true);
+//	BazCrypt(mymessage, mykey,enc,msglen,keylen, mygeneration, 2, true);
 //	char* ret = new char[(int)msglen];
-//	BazCryptChar(enc, mykey, ret, msglen, keylen, mygeneration, 2, true);
+//	BazCrypt(enc, mykey, ret, msglen, keylen, mygeneration, 2, true);
 //
 //	cout << ret << endl;
 //	string q;
@@ -239,7 +239,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //	//return encMs;
 //}
-void BazCryptChar(const char* MESSAGE, const char* password,char* output,unsigned long messageLength,unsigned long passwordLength, int generations, int algorithm, bool verbose)
+void BazCrypt(const char* MESSAGE, const char* password,char* output,unsigned long messageLength,unsigned long passwordLength, int generations, int algorithm, bool verbose)
 {
 
 	int gens = generations;
