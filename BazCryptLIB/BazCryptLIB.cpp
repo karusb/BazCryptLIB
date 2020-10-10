@@ -239,148 +239,83 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //	//return encMs;
 //}
-void BazCrypt(const char* MESSAGE, const char* password,char* output,unsigned long messageLength,unsigned long passwordLength, int generations, int algorithm, bool verbose)
+int BazCrypt(const char* MESSAGE, const char* password, char* output, unsigned long messageLength, unsigned long passwordLength, int generations, int algorithm)
 {
-
+	int r = UNKNERR;
 	int gens = generations;
-	unsigned int ic;
 	int algo = algorithm;
-	//string M = string(MESSAGE);   // Message
-	
-	//string encMs;
-	//string key = string(password); // Key
-	string q; // quit parameter
 	char* encMs = new char[messageLength];
-
-	bool pass = true;
-	bool readback = verbose;
-
-	int tick = 0;
-	int gen = 0;
-
+	r = (MESSAGE == nullptr || password == nullptr) ? NULPARAM : UNKNERR;
+	r = (messageLength == 0 || passwordLength == 0) ? NULLEN : UNKNERR;
 	// Define Bitsets to hold message and CA world
 
-	bitset<8> *bitM = new bitset<8>[messageLength];
-	bitset<8> *bitK = new bitset<8>[messageLength];
-	bitset<8> *bitKn = new bitset<8>[messageLength];
-	bitset<8> *K = new bitset<8>[messageLength];
-	K->reset();
-	bitset<8> *Kd = new bitset<8>[messageLength];;
-	bitset<8> *bitMs = new bitset<8>[messageLength];
-
-	int b = 0;
-	int nbits = messageLength * 8; //bits in the string
-	int by = 0;
+	bitset<8>* bitM = new bitset<8>[messageLength];
+	bitset<8>* bitKn = new bitset<8>[messageLength];
+	bitKn->reset();
+	bitset<8>* bitMs = new bitset<8>[messageLength];
 
 	// String to BITSET CONVERSIONS
-	if (readback)cout << "Plain:";
-	for (std::size_t i = 0; i < messageLength; ++i)
+	for (size_t i = 0; i < messageLength; ++i)
 	{
 		bitM[i] = bitset<8>(MESSAGE[i]);
-		if (readback)cout << static_cast<char>(bitM[i].to_ulong());
-
 	}
-
-	if (readback)cout << endl << endl << "IV:";
 
 	if (passwordLength < messageLength)
 	{
-		for (unsigned int i = 0; i<messageLength; i++)
+		for (size_t i = 0; i < messageLength; i++)
 		{
-
-			bitKn[i] = bitset<8>(password[i%passwordLength]);
-			bitK[i] = bitset<8>(password[i%passwordLength]);
-
-			if (readback)cout << static_cast<char>(bitKn[i].to_ulong());
+			bitKn[i] = bitset<8>(password[i % passwordLength]);
 		}
 	}
 	else
 	{
 		// This case is very unlikely considering a large message
-		for (unsigned int i = 0; i<messageLength; ++i)
+		for (unsigned int i = 0; i < messageLength; ++i)
 		{
-			bitKn[i] = bitset<8>(password[i%passwordLength]);
-			bitK[i] = bitset<8>(password[i%passwordLength]);
-			if (readback)cout << static_cast<char>(bitKn[i].to_ulong());
+			bitKn[i] = bitset<8>(password[i % passwordLength]);
 		}
 	}
-
-	////TRANSFER PASSWORD TO A BIGGER WORLD
-	//for (std::size_t i = 0; i < messageLength * 8; ++i)
-	//{
-	//	K[b][i] = bitKn[b]->test(i % 8); // check the values in bitKn
-	//	if (i % 8 == 0 && i > 0)b += 1; // Increase b at every 8 iterations
-	//}
-
-
-
-		by = 0;
-		// EVOLUTION
-		for (int curgen = 0; curgen < generations; ++curgen)
+	// EVOLUTION
+	for (size_t curgen = 0; curgen < generations; ++curgen)
+	{
+		switch (algo)
 		{
-			switch (algo)
-			{
-			case 0:
-				evolve57630b(bitKn, messageLength);
-				break;
-			case 1:
-				evolve57630z(K, messageLength);
-				break;
-			case 2:
-				evolve39318(K, messageLength);
-				break;
-			default:
-				evolve57630b(K, messageLength);
-				break;
-			}
+		case 0:
+			evolve57630b(bitKn, messageLength);
+			break;
+		case 1:
+			evolve57630z(bitKn, messageLength);
+			break;
+		case 2:
+			evolve39318(bitKn, messageLength);
+			break;
+		default:
+			evolve57630b(bitKn, messageLength);
+			break;
 		}
-		//// SPLIT THE WORLD IN SMALLER WORLDS
-		//for (int i = 0; i <= nbits - 1; i++)
-		//{
-		//	bitKn[by].set(i % 8, K->test(i));
+	}
+	//XOR OPERATION ENCRYPTION
 
-		//	if (i % 8 == 0 && i > 0)by += 1;
-		//}
-
-		if (readback)cout << endl << "EVOLVED" << endl << endl;
-		if (readback)cout << "Encrypted message:";
-		//XOR OPERATION ENCRYPTION
-		//int oncount = 0;
+	for (size_t ic = 0; ic < messageLength; ic++)
+	{
+		for (int i = 0; i < 8; i++)
+		{
+			bitMs[ic][i] = bitM[ic][i] ^ bitKn[ic][i]; // XOR KEY WITH THE MESSAGE
+		}
+		encMs[ic] = static_cast<char>(bitMs[ic].to_ulong());
 		
-		//encMs.clear();
-		for (ic = 0; ic<messageLength; ic++)
-		{
-			for (int i = 0; i < 8; i++)
-			{
-				bitMs[ic][i] = bitM[ic][i] ^ bitKn[ic][i]; // XOR KEY WITH THE MESSAGE
-														   // Bit count functions
-			}
-			//oncount += bitKn[ic].count();
-			//encMs.push_back(bitMs[ic].to_ulong());
-			encMs[ic] = static_cast<char>(bitMs[ic].to_ulong());
-
-		}
-
-	////// STR TO CHAR CONV
-	//char* retchar = new char[encMs.length()];
-	size_t csize = messageLength *  sizeof(char);
-	//char* retptr = NULL;
-	//retptr = (char*)::CoTaskMemAlloc(csize);
+	}
+	size_t csize = messageLength * sizeof(char);
 	memcpy(output, encMs, csize);
 
 	delete[] bitM;
-	delete[] bitK;
 	delete[] bitKn;
 	delete[] bitMs;
 	delete[] encMs;
-	/*return retptr;*/
 
-
-
-
-
-	//return encMs;
+	return OK;
 }
+
 // EVOLVE FUNCTIONS
 // Inputs MUST be a bitset of 20000 bits
 // Nbytes is the message size in bytes which determines the boundaries of evolution within the world
@@ -418,6 +353,7 @@ void evolve39318(bitset<8> *s, int nbytes)
 	}
 
 	for (i = 0; i < nbytes; i++)s[i] = t[i];
+	delete[] t;
 }
 void evolve57630z(bitset<8> *s, int nbytes) //ZERO BOUNDARY EVOLUTION
 {
@@ -448,7 +384,7 @@ void evolve57630z(bitset<8> *s, int nbytes) //ZERO BOUNDARY EVOLUTION
 	}
 
 	for (i = 0; i < nbytes; i++)s[i] = t[i];
-
+	delete[] t;
 }
 void evolve57630b(bitset<8> *s, int nbytes) //CYCLIC BOUNDARY EVOLUTION
 {
@@ -480,7 +416,7 @@ void evolve57630b(bitset<8> *s, int nbytes) //CYCLIC BOUNDARY EVOLUTION
 	}
 
 	for (i = 0; i < nbytes; i++)s[i] = t[i];
-
+	delete[] t;
 }
 
 
