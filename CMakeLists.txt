@@ -3,6 +3,8 @@
 #
 cmake_minimum_required (VERSION 3.8)
 project(BazCryptLIB VERSION 1.0.0 DESCRIPTION "BazCrypt Encryption Library")
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 include(GNUInstallDirs)
 # Add source to this project's executable.
 add_library(BazCryptLIB SHARED
