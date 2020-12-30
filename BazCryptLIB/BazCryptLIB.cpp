@@ -25,10 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace BazCryptLIB
 {
-	int main()
-	{
-		return 0;
-	}
 	using namespace std;
 	inline void evolve39318(bitset<8>* s, int nbytes);
 	inline void evolve57630z(bitset<8>* s, int nbytes);

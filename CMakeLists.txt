@@ -7,7 +7,17 @@ include(GNUInstallDirs)
 # Add source to this project's executable.
 add_library(BazCryptLIB SHARED
     BazCryptLIB/BazCryptLIB.cpp
+    BazCryptLIB/BazCryptLIB.h
 )
+add_executable(BazCryptCLI BazCryptCLI.cpp)
+
+target_link_libraries(BazCryptCLI PUBLIC BazCryptLIB)
+
+target_include_directories(BazCryptCLI PUBLIC
+                          "${PROJECT_BINARY_DIR}"
+                          "${PROJECT_SOURCE_DIR}/BazCryptLIB"
+                          )
+
 set_target_properties(BazCryptLIB PROPERTIES
     VERSION ${PROJECT_VERSION}
     SOVERSION 1
@@ -19,4 +29,6 @@ install(TARGETS BazCryptLIB
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 install(FILES ${CMAKE_BINARY_DIR}/BazCryptLIB.pc
     DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig)
+
+
 # TODO: Add tests.

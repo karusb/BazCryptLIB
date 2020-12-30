@@ -1,7 +1,6 @@
 language: cpp
 compiler:
   - gcc
-  - clang
 script:
-  - cmake
-  - make
+  - cmake .
+  - make install

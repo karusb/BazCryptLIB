@@ -1,4 +1,5 @@
 # BazCryptLIB
+[![Build Status](https://travis-ci.org/karusb/BazCryptLIB.svg?branch=master)](https://travis-ci.org/karusb/BazCryptLIB)
 BazCrypt Encryption C++ Library
 
 Allows you to perform BazCrypt Encryption/Decryption with a simple function call.
@@ -11,8 +12,8 @@ BazCrypt is a symmetric XOR encryption algorithm that uses Cellular Automata to 
  - Communications Encryption (Only valid if password changes for each message)
 
 ## Pre-Compiled Binaries 
- - Download Linux
- - Download Windows
+ - [Download Linux](https://github.com/karusb/BazCryptLIB/releases/download/1.0.0/BazCrypt-v1.0-Linux64.zip)
+ - [Download Windows](https://github.com/karusb/BazCryptLIB/releases/download/1.0.0/BazCrypt-v1.0-Windows64.zip)
 
 ## Convention
 ```c++
