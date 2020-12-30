@@ -1,0 +1,12 @@
+prefix=C:/Users/baris/source/repos/Projects/BazCryptLIB/out/install/x64-Debug
+exec_prefix=C:/Users/baris/source/repos/Projects/BazCryptLIB/out/install/x64-Debug
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: BazCryptLIB
+Description: BazCrypt Encryption Library
+Version: 1.0.0
+
+Requires:
+Libs: -L${libdir} -lBazCryptLIB
+Cflags: -I${includedir}

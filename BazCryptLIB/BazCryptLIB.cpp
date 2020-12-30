@@ -19,23 +19,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 // STD
 #include <bitset>
-#include <stdio.h>
-#include <stdlib.h>
-#include <iostream>
-#include <math.h>
-#include <cmath>
-#include <string>
-#include <objbase.h>
+#include <string.h>
 // Header 
 #include "BazCryptLIB.h"
 
 namespace BazCryptLIB
 {
-
+	int main()
+	{
+		return 0;
+	}
+	using namespace std;
 	inline void evolve39318(bitset<8>* s, int nbytes);
 	inline void evolve57630z(bitset<8>* s, int nbytes);
 	inline void evolve57630b(bitset<8>* s, int nbytes);
-	inline int* pokertest(bitset<8>& s);
+	//inline int* pokertest(bitset<8>& s);
 	int BazCrypt(const char* MESSAGE, const char* password, char* output, unsigned long messageLength, unsigned long passwordLength, int generations, int algorithm)
 	{
 		int gens = generations;
@@ -202,49 +200,49 @@ namespace BazCryptLIB
 
 
 	// Poker test functions takes bitsets of 8 which counts the occurences of the bit values given in array bitval
-	int* pokertest(bitset<8>& s)
-	{
-		// Bit Values to search for poker test are defined here
-		const bool bitval[16 * 4] = { 0,0,0,0,
-			0,0,0,1,
-			0,0,1,0,
-			0,0,1,1,
-			0,1,0,0,
-			0,1,0,1,
-			0,1,1,0,
-			0,1,1,1,
-			1,0,0,0,
-			1,0,0,1,
-			1,0,1,0,
-			1,0,1,1,
-			1,1,0,0,
-			1,1,0,1,
-			1,1,1,0,
-			1,1,1,1
-		};
-		int statArr[16] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
-		//
-		for (int i = 0; i <= 5; i += 4) // iterates twice for 8 bits
-		{
-			for (int t = 0; t < 61; t += 4) //go through bitvals
-			{
-				if (s[i] == bitval[t] && s[i + 1] == bitval[t + 1] && s[i + 2] == bitval[t + 2] && s[i + 3] == bitval[t + 3]) // CHECK THE OCCURRENCES SPECIFIED IN BITVAL
-				{
-					if (t > 0)
-					{
-						statArr[t / 4] = statArr[t / 4] + 1;
-					}
-					else
-					{
-						statArr[t] = statArr[t] + 1;
-					}
-				}
-			}
-		}
-		return statArr;
-	}
+	//int* pokertest(bitset<8>& s)
+	//{
+	//	// Bit Values to search for poker test are defined here
+	//	const bool bitval[16 * 4] = { 0,0,0,0,
+	//		0,0,0,1,
+	//		0,0,1,0,
+	//		0,0,1,1,
+	//		0,1,0,0,
+	//		0,1,0,1,
+	//		0,1,1,0,
+	//		0,1,1,1,
+	//		1,0,0,0,
+	//		1,0,0,1,
+	//		1,0,1,0,
+	//		1,0,1,1,
+	//		1,1,0,0,
+	//		1,1,0,1,
+	//		1,1,1,0,
+	//		1,1,1,1
+	//	};
+	//	int statArr[16] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
+	//	//
+	//	for (int i = 0; i <= 5; i += 4) // iterates twice for 8 bits
+	//	{
+	//		for (int t = 0; t < 61; t += 4) //go through bitvals
+	//		{
+	//			if (s[i] == bitval[t] && s[i + 1] == bitval[t + 1] && s[i + 2] == bitval[t + 2] && s[i + 3] == bitval[t + 3]) // CHECK THE OCCURRENCES SPECIFIED IN BITVAL
+	//			{
+	//				if (t > 0)
+	//				{
+	//					statArr[t / 4] = statArr[t / 4] + 1;
+	//				}
+	//				else
+	//				{
+	//					statArr[t] = statArr[t] + 1;
+	//				}
+	//			}
+	//		}
+	//	}
+	//	return statArr;
+	//}
 
-	///////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//const char* BazCrypt(const char* MESSAGE, const char* password, int generations, int algorithm, bool verbose)
 	//{
 	//

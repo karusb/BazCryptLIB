@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include <vector>
+using namespace std;
 using namespace BazCryptLIB;
 void readFileit(const char* filepath, char* data, unsigned long dataLength)
 {
@@ -397,4 +398,27 @@ TEST(BazCryptMain, badWeather_messageNil) {
     char* enc = new char[msglen];
     auto r = BazCrypt(msg, key, enc, msglen, keylen, gen, algorithm);
     EXPECT_EQ(r, NULLPARAM);
+}
+TEST(BazCryptMain, badWeather_ShortMessage) {
+    char* msg = "This";
+    const char* key = "asimplepasswordtouse";
+    unsigned long keylen = 24;
+    unsigned long msglen = 5;
+    bool verbosity = true;
+    int gen = 1500;
+    int algorithm = 0;
+    char* enc = new char[msglen];
+    BazCrypt(msg, key, enc, msglen, keylen, gen, algorithm);
+    char* ret = new char[msglen];
+    BazCrypt(enc, key, ret, msglen, keylen, gen, algorithm);
+
+    std::vector<char> msgv;
+    makeVector(msg, msglen, &msgv);
+    std::vector<char> outv;
+    makeVector(ret, msglen, &outv);
+    std::vector<char> encv;
+    makeVector(enc, msglen, &encv);
+    EXPECT_NE(msgv, encv);
+    EXPECT_EQ(msgv, outv);
+
 }

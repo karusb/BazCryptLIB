@@ -5,12 +5,16 @@ Allows you to perform BazCrypt Encryption/Decryption with a simple function call
 
 BazCrypt is a symmetric XOR encryption algorithm that uses Cellular Automata to randomise the key that was initially provided as a password and provides extra security with generation number.
 
-Use cases:
+## Use Cases
  - Text Encryption
  - Data Encryption
  - Communications Encryption (Only valid if password changes for each message)
 
-# Convention
+## Pre-Compiled Binaries 
+ - Download Linux
+ - Download Windows
+
+## Convention
 ```c++
 int BazCrypt(const char* MESSAGE, const char* password, char* output, unsigned long messageLength, unsigned long passwordLength, int generations, int algorithm);
 ```
@@ -37,7 +41,22 @@ int BazCrypt(const char* MESSAGE, const char* password, char* output, unsigned l
  - 1 NULLPARAM = One or more input arrays are nullptrs.
  - 2 NULLSIZE  = One or more Length parameters are zero.
 
- # Example BazCrypt Call
+## Build
+### Linux
+  - Required build-essentials, cmake
+  - Run these in terminal within the source directory:
+   ```bash
+   cmake .
+   make install
+   ```
+  - Libraries are automatically installed i.e <BazCryptLIB.h>
+### Windows 
+  - Required Visual Studio
+  - Run BazCryptLIB.sln and choose Release or DLL configuration, right click solution and click build.
+  - Library will be located under x64/Release or x64/DLL depending on your preference
+
+
+## Example BazCrypt Call
  ```c++
  #include "BazCryptLIB.h"
 using namespace BazCryptLIB;
