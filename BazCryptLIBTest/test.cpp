@@ -3,7 +3,7 @@
 #include <string>
 #include <fstream>
 #include <vector>
-
+using namespace BazCryptLIB;
 void readFileit(const char* filepath, char* data, unsigned long dataLength)
 {
     std::ifstream input(filepath, std::ios::binary);
@@ -327,6 +327,7 @@ TEST(BazCryptMain, goodWeather_DataFile) {
     std::cout << "Total unmatch " << totalunmatch << "/" <<msglen<<  std::endl;
     EXPECT_NE(msgv, encv);
     EXPECT_EQ(msgv, outv);
+    EXPECT_EQ(totalunmatch, 0);
     delete[] enc;
     delete[] ret;
 }
@@ -337,21 +338,63 @@ TEST(BazCryptMain, goodWeatherToughFile) {
 }
 
 TEST(BazCryptMain, badWeather_pinNil) {
-    EXPECT_EQ(1, 1);
-    EXPECT_TRUE(true);
+    char* msg = "This is a test plain text. This is also very important to hide!";
+    const char* key = "asimplepasswordtouse";
+    unsigned long keylen = 21;
+    unsigned long msglen = 64;
+    int gen = 0;
+    int algorithm = 2;
+
+    char* enc = new char[msglen];
+    auto r = BazCrypt(msg, key, enc, msglen, keylen, gen, algorithm);
+    EXPECT_EQ(r, NULLSIZE);
 }
 
+TEST(BazCryptMain, badWeather_passNilSize) {
+    char* msg = "This is a test plain text. This is also very important to hide!";
+    const char* key = "asimplepasswordtouse";
+    unsigned long keylen = 0;
+    unsigned long msglen = 64;
+    int gen = 1000;
+    int algorithm = 2;
+
+    char* enc = new char[msglen];
+    auto r = BazCrypt(msg, key, enc, msglen, keylen, gen, algorithm);
+    EXPECT_EQ(r, NULLSIZE);
+}
 TEST(BazCryptMain, badWeather_passNil) {
-    EXPECT_EQ(1, 1);
-    EXPECT_TRUE(true);
-}
+    char* msg = "This is a test plain text. This is also very important to hide!";
+    const char* key = nullptr;
+    unsigned long keylen = 21;
+    unsigned long msglen = 64;
+    int gen = 1000;
+    int algorithm = 2;
 
-TEST(BazCryptMain, badWeather_pinBad) {
-    EXPECT_EQ(1, 1);
-    EXPECT_TRUE(true);
+    char* enc = new char[msglen];
+    auto r = BazCrypt(msg, key, enc, msglen, keylen, gen, algorithm);
+    EXPECT_EQ(r, NULLPARAM);
 }
+TEST(BazCryptMain, badWeather_messageNilSize) {
+    char* msg = "This is a test plain text. This is also very important to hide!";
+    const char* key = "asimplepasswordtouse";
+    unsigned long keylen = 21;
+    unsigned long msglen = 0;
+    int gen = 1000;
+    int algorithm = 2;
 
-TEST(BazCryptMain, badWeather) {
-    EXPECT_EQ(1, 1);
-    EXPECT_TRUE(true);
+    char* enc = new char[msglen];
+    auto r = BazCrypt(msg, key, enc, msglen, keylen, gen, algorithm);
+    EXPECT_EQ(r, NULLSIZE);
+}
+TEST(BazCryptMain, badWeather_messageNil) {
+    char* msg = nullptr;
+    const char* key = "asimplepasswordtouse";
+    unsigned long keylen = 21;
+    unsigned long msglen = 0;
+    int gen = 1000;
+    int algorithm = 2;
+
+    char* enc = new char[msglen];
+    auto r = BazCrypt(msg, key, enc, msglen, keylen, gen, algorithm);
+    EXPECT_EQ(r, NULLPARAM);
 }
