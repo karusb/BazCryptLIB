@@ -26,9 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace BazCryptLIB
 {
 	using namespace std;
-	inline void evolve39318(bitset<8>* s, int nbytes);
-	inline void evolve57630z(bitset<8>* s, int nbytes);
-	inline void evolve57630b(bitset<8>* s, int nbytes);
+	inline void evolve39318(bitset<8>* s, unsigned long nbytes);
+	inline void evolve57630z(bitset<8>* s, unsigned long nbytes);
+	inline void evolve57630b(bitset<8>* s, unsigned long nbytes);
 	//inline int* pokertest(bitset<8>& s);
 	int BazCrypt(const char* MESSAGE, const char* password, char* output, unsigned long messageLength, unsigned long passwordLength, int generations, int algorithm)
 	{
@@ -106,7 +106,7 @@ namespace BazCryptLIB
 	}
 
 	// EVOLVE FUNCTIONS
-	void evolve39318(bitset<8>* s, int nbytes)
+	void evolve39318(bitset<8>* s, unsigned long nbytes)
 	{
 		// RULE 39318 4N
 		std::bitset<8>* t = new std::bitset<8>[nbytes];
@@ -115,7 +115,7 @@ namespace BazCryptLIB
 		t[0][1] = s[0][1] ^ s[0][2] ^ (s[nbytes - 1][8 - 1] | s[0][0]);
 		t[nbytes - 1][8 - 1] = s[nbytes - 1][8 - 1] ^ s[0][0] ^ (s[nbytes - 1][8 - 3] | s[nbytes - 1][8 - 2]);
 
-		for (int j = 0; j < nbytes; ++j)
+		for (size_t j = 0; j < nbytes; ++j)
 		{
 			if (j != 0)
 			{
@@ -133,10 +133,10 @@ namespace BazCryptLIB
 			}
 		}
 
-		for (int i = 0; i < nbytes; i++)s[i] = t[i];
+		for (size_t i = 0; i < nbytes; i++)s[i] = t[i];
 		delete[] t;
 	}
-	void evolve57630z(bitset<8>* s, int nbytes) //ZERO BOUNDARY EVOLUTION
+	void evolve57630z(bitset<8>* s, unsigned long nbytes) //ZERO BOUNDARY EVOLUTION
 	{
 		std::bitset<8>* t = new std::bitset<8>[nbytes];
 
@@ -144,7 +144,7 @@ namespace BazCryptLIB
 		t[0][0] = 0 ^ 0 ^ (s[0][0] | s[0][1]);
 		t[0][1] = 0 ^ s[0][0] ^ (s[0][1] | s[0][2]);
 		t[nbytes - 1][8 - 1] = s[nbytes - 1][8 - 3] ^ s[nbytes - 1][8 - 2] ^ (s[nbytes - 1][8 - 1] | 0);
-		for (int j = 0; j < nbytes; ++j)
+		for (size_t j = 0; j < nbytes; ++j)
 		{
 			if (j != 0)
 			{
@@ -161,10 +161,10 @@ namespace BazCryptLIB
 			}
 		}
 
-		for (int i = 0; i < nbytes; i++)s[i] = t[i];
+		for (size_t i = 0; i < nbytes; i++)s[i] = t[i];
 		delete[] t;
 	}
-	void evolve57630b(bitset<8>* s, int nbytes) //CYCLIC BOUNDARY EVOLUTION
+	void evolve57630b(bitset<8>* s, unsigned long nbytes) //CYCLIC BOUNDARY EVOLUTION
 	{
 		std::bitset<8>* t = new std::bitset<8>[nbytes];
 
@@ -190,7 +190,7 @@ namespace BazCryptLIB
 			}
 		}
 
-		for (int i = 0; i < nbytes; i++)s[i] = t[i];
+		for (size_t i = 0; i < nbytes; i++)s[i] = t[i];
 		delete[] t;
 	}
 
