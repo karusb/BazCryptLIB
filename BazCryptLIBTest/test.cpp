@@ -290,11 +290,7 @@ TEST(BazCryptMain, goodWeather_GenerationsAreDifferent_Algo2) {
 }
 TEST(BazCryptMain, goodWeather_DataFile) {
 
-#define STRINGIFY(x) #x
-#define EXPAND(x) STRINGIFY(x)
-    string s = EXPAND(DATAFILEPATH);
-    s.erase(0, 1); // erase the first quote
-    s.erase(s.size() - 2); // erase the last quote and the dot
+    string s = "../../BazCryptLIBTest/bwbg.png";
     const char* file = s.c_str();
     unsigned long msglen = getFileSize(file);
     char* msg = new char[msglen];

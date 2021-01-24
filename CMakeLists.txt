@@ -11,14 +11,7 @@ add_library(BazCryptLIB SHARED
     BazCryptLIB/BazCryptLIB.cpp
     BazCryptLIB/BazCryptLIB.h
 )
-add_executable(BazCryptCLI BazCryptCLI.cpp)
 
-target_link_libraries(BazCryptCLI PUBLIC BazCryptLIB)
-
-target_include_directories(BazCryptCLI PUBLIC
-                          "${PROJECT_BINARY_DIR}"
-                          "${PROJECT_SOURCE_DIR}/BazCryptLIB"
-                          )
 
 set_target_properties(BazCryptLIB PROPERTIES
     VERSION ${PROJECT_VERSION}
@@ -31,6 +24,28 @@ install(TARGETS BazCryptLIB
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 install(FILES ${CMAKE_BINARY_DIR}/BazCryptLIB.pc
     DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig)
+
+
+    # use, i.e. don't skip the full RPATH for the build tree
+set(CMAKE_SKIP_BUILD_RPATH FALSE)
+
+# when building, don't use the install RPATH already
+# (but later on when installing)
+set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+
+set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+add_executable(bazcrypt BazCryptCLI.cpp)
+
+target_link_libraries(bazcrypt PUBLIC BazCryptLIB)
+
+
+target_include_directories(bazcrypt PUBLIC
+                          "${PROJECT_BINARY_DIR}"
+                          "${PROJECT_SOURCE_DIR}/BazCryptLIB"
+                          "${CMAKE_INSTALL_LIBDIR}"
+                          )
+install(TARGETS bazcrypt
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 
 # TODO: Add tests.

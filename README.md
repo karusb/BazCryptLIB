@@ -12,6 +12,29 @@ BazCrypt is a symmetric XOR encryption algorithm that uses Cellular Automata to 
  - Communications Encryption (Only valid if password changes for each message)
 
 ## Pre-Compiled Binaries 
+### Command Line Interface
+ - [Download Linux](https://github.com/karusb/BazCryptLIB/releases/download/1.0.0/BazCryptCLI-v1.0-Linux64.zip)
+ - [Download Windows](https://github.com/karusb/BazCryptLIB/releases/download/1.0.0/BazCryptCLI-v1.0-Windows64.zip)
+#### Program Options
+```
+    -f  --file     Path to file to encrypt/decrypt
+    -m  --message  Text data to encrypt
+    -p  --pass     Password
+    -g  --gen      Generation number, or known as pincode, use 4 digits atleast
+    -o  --output   Path to output file, when specified input wont be overwritten
+    -a  --algo     Optional algorithm selection, use 0 or 1 or 2, default is 0
+    -L  --license  Prints software licence.
+    -h  --help     Prints this text.
+
+    File encryption/decryption example:
+    bazcrypt -f \\path\\to\\file.txt -p strongpassword -g 1324
+
+    Text encryption/decryption example:
+    bazcrypt -m \"Plain Text\" -p strongpassword -g 1324 -o plain.txt
+    bazcrypt -f plain.txt -p strongpassword -g 1324 -o plain.txt
+
+```
+### Library
  - [Download Linux](https://github.com/karusb/BazCryptLIB/releases/download/1.0.0/BazCrypt-v1.0-Linux64.zip)
  - [Download Windows](https://github.com/karusb/BazCryptLIB/releases/download/1.0.0/BazCrypt-v1.0-Windows64.zip)
 
@@ -51,10 +74,12 @@ int BazCrypt(const char* MESSAGE, const char* password, char* output, unsigned l
    make install
    ```
   - Libraries are automatically installed i.e <BazCryptLIB.h>
+  - CLI(CommandLineInterface) is automatically installed as "bazcrypt"
 ### Windows 
-  - Required Visual Studio
+  - Required Visual Studio and CMake
   - Run BazCryptLIB.sln and choose Release or DLL configuration, right click solution and click build.
   - Library will be located under x64/Release or x64/DLL depending on your preference
+  - CLI(CommandLineInterface) is automatically built as "bazcrypt.exe"
 
 
 ## Example BazCrypt Call
