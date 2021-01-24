@@ -13,8 +13,8 @@ BazCrypt is a symmetric XOR encryption algorithm that uses Cellular Automata to 
 
 ## Pre-Compiled Binaries 
 ### Command Line Interface
- - [Download Linux](https://github.com/karusb/BazCryptLIB/releases/download/1.0.0/BazCryptCLI-v1.0-Linux64.zip)
- - [Download Windows](https://github.com/karusb/BazCryptLIB/releases/download/1.0.0/BazCryptCLI-v1.0-Windows64.zip)
+ - [Download Linux](https://github.com/karusb/BazCryptLIB/releases/download/1.0.1/BazCryptCLI-v1.0-Linux64.zip)
+ - [Download Windows](https://github.com/karusb/BazCryptLIB/releases/download/1.0.1/BazCryptCLI-v1.0-Windows64.zip)
 #### Program Options
 ```
     -f  --file     Path to file to encrypt/decrypt
