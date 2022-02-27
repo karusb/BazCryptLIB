@@ -4,3 +4,4 @@ compiler:
 script:
   - cmake .
   - make
+  - make test

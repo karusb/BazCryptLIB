@@ -1,12 +1,18 @@
-#include "pch.h"
-
-
+#include <gtest/gtest.h>
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <stdio.h>
-#include "../BazCryptCLI.h"
+#include "../BazCryptCLI/BazCryptCLI.h"
 using namespace std;
+
+#if !defined(_WIN32) && (defined(__unix__) || defined(__unix) || (defined(__APPLE__) && defined(__MACH__)))
+/* UNIX-style OS. ------------------------------------------- */
+static string path = "bazcrypt";
+#else
+static string path = "bazcrypt.exe";
+#endif
+
 bool readFile(const char* filepath, char* data, const unsigned long dataLength)
 {
     ifstream file(filepath, ios::in | ios::binary);
@@ -24,8 +30,7 @@ bool readFile(const char* filepath, char* data, const unsigned long dataLength)
     }
 }
 
-TEST(BazCryptCli, goodWeather_message) {
-    string path = "BazCryptCLI.exe";
+TEST(BazCryptCliTest, goodWeather_message) {
     string msg = "SomeTextWhitoutWhiteSpaces";
     string key = "asimplepasswordtouse";
     int gen = 1500;
@@ -34,8 +39,7 @@ TEST(BazCryptCli, goodWeather_message) {
     int exitcode = system(fullcmd.c_str());
     EXPECT_EQ(exitcode, 0);
 }
-TEST(BazCryptCli, goodWeather_message2) {
-    string path = "BazCryptCLI.exe";
+TEST(BazCryptCliTest, goodWeather_message2) {
     string msg = "This is a test plain text. This is also very important to hide!";
     string key = "asimplepasswordtouse";
     int gen = 1500;
@@ -45,14 +49,12 @@ TEST(BazCryptCli, goodWeather_message2) {
     EXPECT_EQ(exitcode, 0);
 }
 
-TEST(BazCryptCli, goodWeather_file) {
-    string path = "BazCryptCLI.exe";
-    string msgPath = "../../BazCryptLIBTest/small.txt";
+TEST(BazCryptCliTest, goodWeather_file) {
+    string msgPath = "small.txt";
     string msg = "This is a test plain text. This is also very important to hide!";
     string key = "asimplepasswordtouse";
     int gen = 1500;
     int algorithm = 0;
-    //string fullcmd = path + " -m \"" + msg + "\" -p \"" + key + "\" -g " + to_string(gen) + " -a " + to_string(algorithm);
     string fullcmd = path + " -f " + msgPath + " -p " + key + " -g " + to_string(gen) + " -a " + to_string(algorithm);
     // ENCR
     int exitcode = system(fullcmd.c_str());

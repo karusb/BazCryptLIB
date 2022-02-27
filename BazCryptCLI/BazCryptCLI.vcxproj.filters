@@ -15,12 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\BazCryptCLI.cpp">
+    <ClCompile Include="BazCryptCLI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\BazCryptCLI.h">
+    <ClInclude Include="BazCryptCLI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

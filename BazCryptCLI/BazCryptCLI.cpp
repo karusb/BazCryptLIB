@@ -1,11 +1,12 @@
 #include "BazCryptCLI.h"
-#include <BazCryptLIB.h>
+#include "BazCryptLIB.h"
 #include <iostream>
 #include <fstream>
 #include <iomanip>
 #include <sstream>
 using namespace BazCryptLIB;
 using namespace std;
+
 int main(int argc, char* argv[])
 {
     int gens;
@@ -37,66 +38,53 @@ int main(int argc, char* argv[])
         bool waitingOptionInput = false;
         while (argv[argno] != NULL)
         {
-            if (argv[argno][0] == char('-'))
+            if (argv[argno] == string("-h") || argv[argno] == string("-help") || argv[argno] == string("--help"))
             {
-                if (argv[argno] == string("-f") || argv[argno] == string("--file"))
-                {
-                    filechoice = true;
-                    fname = argv[argno + 1];
-                    tick += 1;
-                    waitingOptionInput = true;
-                }
-                if (argv[argno] == string("-o") || argv[argno] == string("--output"))
-                {
-                    newout = true;
-                    newfname = argv[argno + 1];
-                    tick += 1;
-                    waitingOptionInput = true;
-                }
-                if (argv[argno] == string("-g") || argv[argno] == string("--gen"))
-                {
-                    gens = atoi(argv[argno + 1]);
-                    if (gens > 0)tick += 1;
-                    waitingOptionInput = true;
-                }
-                if (argv[argno] == string("-m") || argv[argno] == string("--message"))
-                {
-                    statM = true;
-                    msg = argv[argno + 1];
-                    tick += 1;
-                    waitingOptionInput = true;
-                }
-                if (argv[argno] == string("-p") || argv[argno] == string("--pass"))
-                {
-                    key = argv[argno + 1];
-                    tick += 1;
-                    waitingOptionInput = true;
-                }
-                if ((argv[argno] == string("-a") || argv[argno] == string("--algo")) && int(argv[argno + 1] >= 0))
-                {
-                    algo = atoi(argv[argno + 1]);
-                    waitingOptionInput = true;
-                }
-                if (argv[argno] == string("-L") || argv[argno] == string("--license"))
-                {
-                    // GNU License Output //
-                    cout << GNULICENSE << endl << endl << endl;
-                }
-                if (argv[argno] == string("-h") || argv[argno] == string("-help") || argv[argno] == string("--help"))
-                {
-                    printHelp();
-                }
+                printHelp();
+                return 0;
             }
-            else
+            if (argv[argno] == string("-f") || argv[argno] == string("--file"))
             {
-                if (waitingOptionInput)
-                {
-                    waitingOptionInput = false;
-                }
-                else
-                {
-                    cout << "Unexpected character as a parameter,./ -f myfile.txt -g 1500 -p 123abc" << endl;
-                }
+                filechoice = true;
+                fname = argv[argno + 1];
+                tick += 1;
+                waitingOptionInput = true;
+            }
+            if (argv[argno] == string("-o") || argv[argno] == string("--output"))
+            {
+                newout = true;
+                newfname = argv[argno + 1];
+                tick += 1;
+                waitingOptionInput = true;
+            }
+            if (argv[argno] == string("-g") || argv[argno] == string("--gen"))
+            {
+                gens = atoi(argv[argno + 1]);
+                if (gens > 0)tick += 1;
+                waitingOptionInput = true;
+            }
+            if (argv[argno] == string("-m") || argv[argno] == string("--message"))
+            {
+                statM = true;
+                msg = argv[argno + 1];
+                tick += 1;
+                waitingOptionInput = true;
+            }
+            if (argv[argno] == string("-p") || argv[argno] == string("--pass"))
+            {
+                key = argv[argno + 1];
+                tick += 1;
+                waitingOptionInput = true;
+            }
+            if ((argv[argno] == string("-a") || argv[argno] == string("--algo")))
+            {
+                algo = atoi(argv[argno + 1]);
+                waitingOptionInput = true;
+            }
+            if (argv[argno] == string("-L") || argv[argno] == string("--license"))
+            {
+                // GNU License Output //
+                cout << GNULICENSE << endl << endl << endl;
             }
             argno += 1;
         }
@@ -122,8 +110,10 @@ int main(int argc, char* argv[])
     if (filechoice)
     {
         filechoiceloc:
-        if (interactive)cout << "Please enter the filename path" << endl;
-        if (interactive)cin >> fname;
+        if (interactive)
+            cout << "Please enter the filename path" << endl;
+        if (interactive)
+            cin >> fname;
         msgLen  = getFileSize(fname.c_str());
         msgByte = new char[msgLen];
         enc = new char[msgLen];
@@ -148,25 +138,22 @@ int main(int argc, char* argv[])
         msgLen = msg.size();
         enc = new char[msgLen];
         exitCode = BazCrypt(msg.c_str(), key.c_str(), enc, msgLen, key.size(), gens, algo);
-
     }
-    if(exitCode == 0 )DoWithOptions(enc, msgLen, filechoice, fname, newfname);
+    if(exitCode == 0)
+        DoWithOptions(enc, msgLen, filechoice, fname, newfname);
     delete[] enc;
 
     return exitCode;
 }
-void DoWithOptions(char* encData, unsigned long long msgLen,bool fileInput,string infilename ,string outfilename )
+
+void DoWithOptions(char* encData, unsigned long long msgLen, bool fileInput, string infilename, string outfilename )
 {
     if (fileInput)
     {
         if (outfilename != "")
-        {
             writeBinFile(outfilename.c_str(), encData, msgLen);
-        }
         else
-        {
             writeBinFile(infilename.c_str(), encData, msgLen);
-        }
     }
     else
     {
@@ -175,11 +162,10 @@ void DoWithOptions(char* encData, unsigned long long msgLen,bool fileInput,strin
         cout << outStr << endl;
         cout << "------------------------- END --------------------------" << endl;
         if (outfilename != "")
-        {
             writeTxtFile(outfilename.c_str(), encData, msgLen);
-        }
     }
 }
+
 unsigned long getFileSize(const char* filepath)
 {
     ifstream file(filepath, ios::in | ios::binary | ios::ate);
@@ -194,6 +180,7 @@ unsigned long getFileSize(const char* filepath)
     else cout << "Unable to open file";
     return 0;
 }
+
 bool readFile(const char* filepath, char* data, const unsigned long dataLength)
 {
     ifstream file(filepath, ios::in | ios::binary);
@@ -210,6 +197,7 @@ bool readFile(const char* filepath, char* data, const unsigned long dataLength)
         return false;
     }
 }
+
 bool writeBinFile(const char* filepath, char* data, const unsigned long dataLength)
 {
     ofstream file(filepath, ios::out | ios::binary);
@@ -226,6 +214,7 @@ bool writeBinFile(const char* filepath, char* data, const unsigned long dataLeng
         return false;
     }
 }
+
 bool writeTxtFile(const char* filepath, char* data, const unsigned long dataLength)
 {
     ofstream file(filepath);
@@ -242,6 +231,7 @@ bool writeTxtFile(const char* filepath, char* data, const unsigned long dataLeng
         return false;
     }
 }
+
 void printHelp()
 {
     cout << "Bazcrypt Command Line Interface Program Options :" << endl;
@@ -257,5 +247,4 @@ void printHelp()
     cout << "bazcrypt -m \"Plain Text\" -p strongpassword -g 1324" << endl;
     cout << "File encryption example: " << endl;
     cout << "bazcrypt -f \\path\\to\\file.txt -p strongpassword -g 1324" << endl;
-    
 }
