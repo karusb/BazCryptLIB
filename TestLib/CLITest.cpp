@@ -13,21 +13,12 @@ static string path = "bazcrypt";
 static string path = "bazcrypt.exe";
 #endif
 
-bool readFile(const char* filepath, char* data, const unsigned long dataLength)
+void fileRead(const char* filepath, char* data, unsigned long dataLength)
 {
     ifstream file(filepath, ios::in | ios::binary);
-    if (file.is_open())
-    {
-        file.read(data, dataLength);
-        file.seekg(0, ios::beg);
-        file.close();
-        return true;
-    }
-    else
-    {
-        cout << "Unable to open file";
-        return false;
-    }
+    file.read(data, dataLength);
+    file.seekg(0, ios::beg);
+    file.close();
 }
 
 TEST(BazCryptCliTest, goodWeather_message) {
@@ -59,13 +50,13 @@ TEST(BazCryptCliTest, goodWeather_file) {
     // ENCR
     int exitcode = system(fullcmd.c_str());
     char* encoutput = new char[msg.size()];
-    readFile(msgPath.c_str(), encoutput, msg.size());
+    fileRead(msgPath.c_str(), encoutput, msg.size());
     string encstr = string(encoutput, msg.size());
     EXPECT_NE(encstr, msg);
     // DECR
     int exitcode2 = system(fullcmd.c_str());
     char* output = new char[msg.size()];
-    readFile(msgPath.c_str(), output, msg.size());
+    fileRead(msgPath.c_str(), output, msg.size());
     string outputstr = string(output, msg.size());
     EXPECT_EQ(outputstr, msg);
     delete[] output;
