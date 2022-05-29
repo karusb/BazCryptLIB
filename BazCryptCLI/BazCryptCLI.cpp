@@ -15,29 +15,31 @@ int main(int argc, const char* argv[])
     Cli po(argc, argv, "Bazcrypt Command Line Interface");
 
     string defaultAlgorithm = "0";
-    po.flag("-l", [&](const Option&) { cout << GNULICENSE << endl << endl << endl; }, "--license", "Prints software licence.").prioritize();
+    po.flag("-l", [&](const Option&) { cout << GNULICENSE << endl << endl << endl; }, "Prints software licence.", "--license")
+        .prioritize();
 
-    auto& password = po.option("-p", "--password", "Password for the encryption/decryption").mandatory();
-    auto& algorithm = po.option("-a", "--algorithm", "Optional algorithm selection, use 0 or 1 or 2, default is 0", defaultAlgorithm);
-    StringConstraint algorithmConstraint(algorithm, { "0", "1", "2" });
-    auto& generation = po.option("-g", "--generations", "Number of generations to run (sort of pin code), must be bigger than 1").mandatory();
-    MinMaxConstraint<unsigned long> zeroLimit(generation, { 1, numeric_limits<unsigned long>::max() });
+    auto& password = po.option("-p", "--password", "Password for the encryption/decryption")
+        .mandatory();
+    auto& algorithm = po.option("-a", "--algorithm", "Optional algorithm selection, use 0 or 1 or 2, default is 0", defaultAlgorithm)
+        .constrain({ "0", "1", "2" });
+    auto& generation = po.option("-g", "--generations", "Number of generations to run (sort of pin code), must be bigger than 1")
+        .mandatory()
+        .constrain<unsigned long>({ 1, numeric_limits<unsigned long>::max() });
 
     auto& output = po.option("-o", "--output", "When defined, output is written to the specified file");
 
     FunctionMultiOption file(&po, "-f", [&](const Option& file) 
         {
-            encryptFile(file.value(), password.value(), output.value(), getFileSize(file.value()), password.valueAs<std::string>().size(), generation.valueAs<int>(), algorithm.valueAs<int>());
-        }, "--file", "File as chosen input to encrypt/decrypt");
-    FunctionConstraint fileExists(file, [](const Option& file) { return ifstream(file.valueAs<std::string>(), ios::in).is_open(); }, "file doesn't exist");
+            for (const auto& filePath : file.values())
+                encryptFile(filePath, password.value(), output.value(), getFileSize(filePath), password.valueAs<std::string>().size(), generation.valueAs<int>(), algorithm.valueAs<int>());
+        }, "--file", "File as chosen input to encrypt/decrypt", "", true);
+    FunctionConstraint filesExist(file, [](const Option& file) { return ifstream(file.valueAs<std::string>(), ios::in).is_open(); }, "file doesn't exist");
 
     FunctionOption message(&po, "-m", [&](const Option& msg)
         {
             encryptText(msg.value(), password.value(), output.value(), msg.valueAs<std::string>().size(), password.valueAs<std::string>().size(), generation.valueAs<int>(), algorithm.valueAs<int>());
-        }, "--message", "Text message to encrypt/decrypt");
+        }, "--message", "Text message to encrypt/decrypt", "", true);
 
-    file.mandatory();
-    message.mandatory();
     MutuallyExclusive userChoice(&po, file, message);
 
     po.userInputRequired();
